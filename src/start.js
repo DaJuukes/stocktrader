@@ -1,8 +1,20 @@
-const Discord = require('discord.js');
-const config = require('./config/config.json');
+const Discord = require('discord.js')
 
-const path = require('path');
-global.srcRoot = path.resolve(__dirname);
+const isTravisBuild = process.argv[2] && process.argv[2] === '--travis'
 
-const Manager = new Discord.ShardingManager(srcRoot + '/bot.js', { totalShards: config.shards, token: config.token });
-Manager.spawn();
+const dotenv = require('dotenv')
+
+if (isTravisBuild) dotenv.config({ path: './env/example.env' })
+else dotenv.config({ path: './env/vars.env' })
+if (isTravisBuild) process.exit(0)
+
+const path = require('path')
+global.srcRoot = path.resolve(__dirname)
+
+if (!process.env.TOKEN) {
+  console.log('no token')
+  process.exit(0)
+}
+
+const Manager = new Discord.ShardingManager(srcRoot + '/bot.js', { totalShards: parseInt(process.env.SHARDS), token: process.env.TOKEN })
+Manager.spawn()

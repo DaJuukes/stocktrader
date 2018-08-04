@@ -1,4 +1,5 @@
-exports.run = (bot, msg) => {
+const handleMessage = require('../handlers/msgHandler.js')
 
-    bot.handleMessage(msg, bot, null);
-};
+exports.run = (bot, msg) => {
+  handleMessage(msg, bot, null)
+}

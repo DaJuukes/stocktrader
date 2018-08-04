@@ -1,76 +1,63 @@
-const isTravisBuild = process.argv[2] && process.argv[2] === '--travis';
+const path = require('path')
+global.srcRoot = path.resolve(__dirname)
 
-const config = isTravisBuild ? require('./config/config-example.json') : require('./config/config.json');
+const DBL = require('dblapi.js')
 
-const path = require('path');
-global.srcRoot = path.resolve(__dirname);
+const Discord = require('discord.js')
+const bot = new Discord.Client()
 
-const DBL = require("dblapi.js");
+require('./funcs.js')(bot)
+const readdir = require('fs').readdir
 
-const Discord = require('discord.js');
-const bot = new Discord.Client(config.opts);
-bot.config = config;
+if (process.env.DBOTSPW) {
+  const dbl = new DBL(process.env.DBOTSPW, bot)
 
-require('./funcs.js')(bot);
-const readdir = require('fs').readdir;
+  dbl.on('posted', () => {
+    return console.log('All server counts posted successfully!')
+  })
 
-if (config.dbotspw) {
+  dbl.on('error', (err) => {
+    return console.error(err)
+  })
 
-    const dbl = new DBL(config.dbotspw, bot);
-
-    dbl.on("posted", () => {
-        return console.log('All server counts posted successfully!');
-    });
-
-    dbl.on("error", (err) => {
-        return console.error(err);
-    });
-
-    console.log("Posting server counts...");
+  console.log('Posting server counts...')
 } else {
-    console.log('No Discord Bot List token was found.');
+  console.log('No Discord Bot List token was found.')
 }
 
-bot.commands = new Discord.Collection();
-bot.aliases = new Discord.Collection();
-bot.events = new Discord.Collection();
+bot.commands = new Discord.Collection()
+bot.aliases = new Discord.Collection()
+bot.events = new Discord.Collection()
 
 readdir(srcRoot + '/modules/', (err, files) => {
-    if (err) throw err;
-    bot.handleMessage = require('./handlers/msgHandler.js');
-    bot.log(`Loading ${files.length} commands!`);
-    files.forEach(f => {
-        try {
-            var name = require(`./modules/${f}`).name;
-            bot.commands.set(name, require(`./modules/${f}`));
-            /* commandFile.aliases.forEach(alias => {
-                bot.aliases.set(alias, commandFile.help.name);
-            });*/
-        } catch (e) {
-            bot.log(`Unable to load command ${f}: ${e}`);
-        }
-    });
-    bot.log(`Commands loaded!`);
-});
+  if (err) throw err
+  bot.handleMessage = require('./handlers/msgHandler.js')
+  bot.log(`Loading ${files.length} commands!`)
+  files.forEach(f => {
+    try {
+      var name = require(`./modules/${f}`).name
+      bot.commands.set(name, require(`./modules/${f}`))
+    } catch (e) {
+      bot.log(`Unable to load command ${f}: ${e}`)
+    }
+  })
+  bot.log(`Commands loaded!`)
+})
 
 readdir(srcRoot + '/events/', (err, files) => {
-    if (err) throw err;
-    bot.log(`Loading ${files.length} events!`);
-    files.forEach(file => {
-        bot.events.set(file.substring(0, file.length - 3), require(`./events/${file}`));
-        bot.on(file.split('.')[0], (...args) => {
-            require(`./events/${file}`).run(bot, ...args);
-        });
-    });
-    bot.log(`Events loaded!`);
-});
+  if (err) throw err
+  bot.log(`Loading ${files.length} events!`)
+  files.forEach(file => {
+    bot.events.set(file.substring(0, file.length - 3), require(`./events/${file}`))
+    bot.on(file.split('.')[0], (...args) => {
+      require(`./events/${file}`).run(bot, ...args)
+    })
+  })
+  bot.log(`Events loaded!`)
+})
 
-if (isTravisBuild) process.exit(0);
-
-if (bot.config.token) {
-    bot.login(bot.config.token);
-} else if (process.env.TOKEN) {
-    bot.login(process.env.TOKEN);
+if (process.env.TOKEN) {
+  bot.login(process.env.TOKEN)
 } else {
-    console.log('no token provided');
+  console.log('no token provided')
 }
