@@ -37,7 +37,7 @@ module.exports = {
       .addField(`😀 Users`, users, true)
       .addField(`⌨ Channels`, channels, true)
       .addField(`🏆 Guilds`, guilds, true)
-      .setFooter(`Made by DaJuukes#0001 and kuroro#4245`)
+      .setFooter(`Made by DaJuukes#0001`)
 
     if (bot.permLevel(message) === 6) {
       // owner stats

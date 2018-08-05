@@ -13,7 +13,7 @@ module.exports = {
       .setThumbnail(bot.user.displayAvatarURL)
       .setDescription(`Upvoting this bot really helps the developers out and lets the bot get more publicity!`)
       .setColor(`ORANGE`)
-      .addField(`Discord Bot List`, `[Upvote Here](https://discordbots.org/bot/411996950670344234/vote)`, true)
+      .addField(`Discord Bot List`, `[Upvote Here](${process.env.UPVOTE_LINK})`, true)
 
     message.channel.send(emb)
   }

@@ -7,8 +7,8 @@ const buildCommands = function () {
   commands['$'] = {
     name: '$',
     usage: '$[coin]',
-    example: '$eth',
-    help: 'Get all price data for a certain coin - always use $ as prefix'
+    example: '$aapl',
+    help: 'Get all price data for a certain stock - always use $ as prefix'
   }
 
   const files = readdirSync(srcRoot + '/modules/')
@@ -50,13 +50,14 @@ module.exports = {
       if (gName === 'This DM') message.channel.send(`Sending you commands in DM...`)
 
       let text = `**${gName}'s prefix is ${prefix}**\n\n` +
-                       `\nInvite this bot to your server [here](https://discordapp.com/oauth2/authorize?client_id=411996950670344234&permissions=16384&scope=bot)\n\n` +
+                       `\nInvite this bot to your server [here](${process.env.BOT_INVITE})\n\n` +
                        `\nUpvote the bot on DBL [here](https://discordbots.org/bot/411996950670344234/vote)` +
                        `\n**Command List**\n` +
                        `Use \`help [command] \` to get more info on a specific command \n` +
                        `For example,  \`help scan\`\n\n` +
-                       '**Core** - `top` `scan` `convert` `coininfo` `$` \n' +
-                       '**Fun** - `flippening` `shitcoin`\n' +
+                       '**Core** - `$` \n' +
+                       '**Simulator** - Coming soon\n' +
+                       '**Fun** - Coming soon\n' +
                        '**Management** - `invite` `upvote` `ping` `setprefix` `stats` \n\n' +
                        `WEBSITE: <http://discrypto.xyz>` +
                        `\nSupport: <http://discordapp.com/invite/Xg5V8mn>`

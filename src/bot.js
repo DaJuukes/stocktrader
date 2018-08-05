@@ -4,9 +4,9 @@ global.srcRoot = path.resolve(__dirname)
 const DBL = require('dblapi.js')
 
 const Discord = require('discord.js')
-const bot = new Discord.Client()
+let bot = new Discord.Client()
 
-require('./funcs.js')(bot)
+bot = require('./funcs')(bot)
 const readdir = require('fs').readdir
 
 if (process.env.DBOTSPW) {

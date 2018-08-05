@@ -1,118 +1,5 @@
-const {Server} = require('./db')
 const snekfetch = require('snekfetch')
-const Discord = require('discord.js')
-const tickers = require('./data/tickers.json')
-
 module.exports = bot => {
-  /**
-     * Server Related Functions
-     */
-
-  bot.syncServers = async function () {
-    return new Promise((resolve, reject) => {
-      bot.guilds.forEach(guild => {
-        Server.findOne({id: guild.id}).then(server => {
-          if (!server) {
-            Server.create({ id: guild.id, prefix: process.env.DEFAULT_PREFIX })
-          }
-        })
-      })
-      bot.log('Servers synced.')
-      resolve(true)
-    })
-  }
-
-  bot.removeServer = async function (guild) {
-    await Server.remove({id: guild.id})
-    bot.log(guild.name + ' successfully removed from the database!')
-  }
-
-  bot.addServer = async function (guild) {
-    await Server.create({id: guild.id, prefix: process.env.DEFAULT_PREFIX})
-    bot.log(guild.name + ' successfully inserted into the database!')
-  }
-
-  bot.getPrefix = async function (msg) {
-    const {prefix} = await Server.findOne({id: msg.guild.id})
-    if (!prefix) bot.error('prefix not found for guild ' + msg.guild.name)
-    return prefix
-  }
-
-  bot.setPrefix = async function (prefix, guild) {
-    return Server.findOneAndUpdate({id: guild.id}, {prefix})
-  }
-
-  bot.showUsage = async function (command, msg) {
-    let prefix = await this.getPrefix(msg)
-    if (command.name === '$') prefix = ''
-
-    let emb = new Discord.RichEmbed()
-
-    emb.addField(prefix + command.usage, command.help)
-    emb.addField('Usage', prefix + command.example)
-
-    emb.setColor(`GOLD`)
-
-    msg.channel.send(emb)
-  }
-
-  /*
-  * Core message processing functions
-  */
-
-  // Implement categories of commands and check this based on those
-  bot.enabled = function (command, guild) {
-    if (command || guild) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  bot.permLevel = function (msg) {
-    const {author, guild, member} = msg
-
-    if (msg.channel.type === 'dm') return 5
-
-    if (process.env.OWNER === msg.author.id) {
-      return 6
-    } else if (author && guild && guild.owner && author.id === guild.owner.id) {
-      return 5
-    } else if (member.hasPermission('MANAGE_GUILD')) {
-      return 4
-    } else if (member.hasPermission('MANAGE_ROLES_OR_PERMISSIONS')) {
-      return 3
-    } else if (member.hasPermission('MANAGE_MESSAGES')) {
-      return 2
-    } else {
-      return 1
-    }
-  }
-
-  bot.getTicker = function (ticker) {
-    let keys = Object.keys(tickers)
-    let values = Object.values(tickers)
-    let isTickerNameProvided = values.indexOf(ticker) > -1
-
-    if (isTickerNameProvided) {
-      return {'ticker': keys[values.indexOf(ticker)], 'name': ticker}
-    } else if (tickers[ticker]) {
-      return {'ticker': ticker, 'name': tickers[ticker]}
-    } else {
-      return {'failed': true}
-    }
-  }
-
-  /*
-  * Core bot functions
-  */
-
-  bot.send = function (channel2, text) {
-    var color = channel2.guild.me.displayHexColor || '#ffb200'
-    channel2.send(new Discord.RichEmbed().setColor(color).setDescription(text)
-      .setFooter(bot.user.username, bot.user.avatarURL))
-  }
-
   bot.startGameCycle = async function () {
     async function getRand (count) {
       return snekfetch.get(`http://api.coinmarketcap.com/v1/ticker/?start=${Math.round(Math.random() * 10) * count}&limit=1`)
@@ -245,8 +132,8 @@ module.exports = bot => {
   }
 
   /**
-  * Logging functions
-  */
+    * Logging functions
+    */
 
   bot.logCommand = function (command, args, user, channel2, server) {
     bot.webhook('Command Executed', `**Command:** ${command}\n**User:** ${user}\n**Arguments:** ${args}\n**Server:** ${server}\n**Channel:** #${channel2}`, '#0000FF')

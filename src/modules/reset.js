@@ -6,7 +6,6 @@ module.exports = {
   permission: 6,
   help: 'Restarts the bot.',
   main: async function (bot, msg) {
-    console.log(`called`)
     if (msg.args[0] == null || msg.args[0] === 'local') {
       if (!bot.shard) {
         msg.channel.send(':wave: ' + bot.user.username + ' is restarting...')

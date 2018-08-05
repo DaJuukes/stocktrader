@@ -12,8 +12,8 @@ module.exports = {
       .setTitle(`Bot Resources`)
       .setThumbnail(bot.user.displayAvatarURL)
       .setColor(`GOLD`)
-      .addField(`Bot Invite`, `[Here](https://discordapp.com/oauth2/authorize?client_id=411996950670344234&permissions=16384&scope=bot)`, true)
-      .addField(`Support Server`, `[Here](https://discord.gg/Xg5V8mn)`, true)
+      .addField(`Bot Invite`, `[Here](${process.env.BOT_INVITE})`, true)
+      .addField(`Support Server`, `[Here](${process.env.SUPPORT_SERVER})`, true)
 
     message.channel.send(emb)
   }
