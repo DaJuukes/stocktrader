@@ -1,4 +1,4 @@
-const {Server} = require(srcRoot + '\\db')
+const {Server} = require('../../db')
 
 module.exports = bot => {
   bot.syncServers = async function () {
