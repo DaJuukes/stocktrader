@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
-const Decimal = require('decimal.js')
 
 const stock = new mongoose.Schema({
-  ticker: String,
+  ticker: {
+    type: String,
+    unique: true
+  },
   count: Number
 })
 
@@ -28,7 +30,7 @@ let s = {
 s.schema.statics.deposit = async function (user, amount) {
   return new Promise((resolve, reject) => {
     this.validateDepositAmount(user, amount).then(() => {
-      this.findOneAndUpdate({ _id: user._id }, { $inc: { 'balance': Decimal(amount).toFixed() } }).then((r) => resolve(r))
+      this.findOneAndUpdate({ _id: user._id }, { $inc: { 'balance': amount } }).then((r) => resolve(r))
     }).catch((err) => reject(err))
   })
 }
@@ -36,7 +38,7 @@ s.schema.statics.deposit = async function (user, amount) {
 s.schema.statics.withdraw = async function (user, amount) {
   return new Promise((resolve, reject) => {
     this.validateWithdrawAmount(user, amount).then(() => {
-      this.findOneAndUpdate({ _id: user._id }, { $inc: { 'balance': Decimal(0).minus(Decimal(amount)).toFixed() } }).then((r) => resolve(r))
+      this.findOneAndUpdate({ _id: user._id }, { $inc: { 'balance': 0 - amount } }).then((r) => resolve(r))
     }).catch((err) => reject(err))
   })
 }
@@ -48,12 +50,51 @@ s.schema.statics.validateDepositAmount = function (user, amount) {
 }
 
 s.schema.statics.validateWithdrawAmount = async function (user, amount) {
-  amount = Decimal(amount)
-
-  if (amount.isNaN()) return Promise.reject(new Error('amount is not a number'))
-  else if (amount.greaterThan(Decimal(user.balance.toString()))) return Promise.reject(new Error('insufficient funds'))
+  if (isNaN(amount)) return Promise.reject(new Error('amount is not a number'))
+  else if (amount > user.balance) return Promise.reject(new Error('insufficient funds'))
 
   return Promise.resolve({})
+}
+
+s.schema.statics.buyStock = async function (user, ticker, amount, totalCost) {
+  return new Promise((resolve, reject) => {
+    this.withdraw(user, totalCost).then(async () => {
+      const _stockAmt = await this.findOne({ _id: user._id, 'stocks.ticker': ticker }, { 'stocks.$.count': 1 })
+      let stockAmt
+      if (!_stockAmt) stockAmt = 0
+      else stockAmt = _stockAmt.stocks[0].count
+      if (!stockAmt) {
+        this.findOneAndUpdate({_id: user._id}, { $push: { stocks: { ticker, count: amount } } }).then(() => {
+          resolve(amount)
+        })
+      } else {
+        this.findOneAndUpdate({ _id: user._id, 'stocks.ticker': ticker }, { $inc: { 'stocks.$.count': amount } }).then(() => {
+          resolve(stockAmt + amount)
+        })
+      }
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
+s.schema.statics.sellStock = async function (user, ticker, amount, totalCost) {
+  return new Promise(async (resolve, reject) => {
+    const _stockAmt = await this.findOne({ _id: user._id, 'stocks.ticker': ticker }, { 'stocks.$.count': 1 })
+    let stockAmt
+    if (!_stockAmt) stockAmt = 0
+    else stockAmt = _stockAmt.stocks[0].count
+
+    if (!stockAmt || stockAmt < amount) {
+      reject(new Error('user does not have enough stock'))
+    } else {
+      this.findOneAndUpdate({ _id: user._id, 'stocks.ticker': ticker }, { $inc: { 'stocks.$.count': -amount } }).then(() => {
+        this.deposit(user, totalCost).then(() => {
+          resolve(stockAmt - amount)
+        }).catch(reject)
+      }).catch(reject)
+    }
+  })
 }
 
 module.exports = mongoose.model(s.name, s.schema)
