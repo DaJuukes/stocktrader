@@ -12,7 +12,7 @@ module.exports = {
       .setTitle(`Bot Resources`)
       .setThumbnail(bot.user.displayAvatarURL)
       .setColor(`GOLD`)
-      .addField(`Bot Invite`, `[Here](${process.env.BOT_INVITE})`, true)
+      .addField(`Bot Invite`, `[Here](${process.env.INVITE_LINK})`, true)
       .addField(`Support Server`, `[Here](${process.env.SUPPORT_SERVER})`, true)
 
     message.channel.send(emb)

@@ -51,7 +51,7 @@ module.exports = {
 
       let text = `**${gName}'s prefix is ${prefix}**\n\n` +
                        `\nInvite this bot to your server [here](${process.env.BOT_INVITE})\n\n` +
-                       `\nUpvote the bot on DBL [here](https://discordbots.org/bot/411996950670344234/vote)` +
+                       `\nUpvote the bot on DBL [here](${process.env.UPVOTE_LINK})` +
                        `\n**Command List**\n` +
                        `Use \`help [command] \` to get more info on a specific command \n` +
                        `For example,  \`help scan\`\n\n` +
@@ -59,8 +59,7 @@ module.exports = {
                        '**Simulator** - Coming soon\n' +
                        '**Fun** - Coming soon\n' +
                        '**Management** - `invite` `upvote` `ping` `setprefix` `stats` \n\n' +
-                       `WEBSITE: <http://discrypto.xyz>` +
-                       `\nSupport: <http://discordapp.com/invite/Xg5V8mn>`
+                       `\nSupport: <${process.env.SUPPORT_SERVER}>`
 
       let emb = new Discord.RichEmbed()
         .setColor(`GOLD`)

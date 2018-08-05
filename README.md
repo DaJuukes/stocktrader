@@ -3,7 +3,11 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-git.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-Invite me! https://discordapp.com/oauth2/authorize?client_id=411996950670344234&permissions=16384&scope=bot
+Invite me! https://discordapp.com/api/oauth2/authorize?client_id=475393231324971008&permissions=18496&scope=bot
+
+Join my support server! https://discord.gg/mRQRtj6
+
+Upvote me on DBL! (Coming soon)
 
 # Installation
 
@@ -20,6 +24,6 @@ Fill out config values as needed
 # Usage
 
     npm run start
-  
+
 Join our support server at https://discord.gg/Xg5V8mn for the latest news and information!
 </p>
