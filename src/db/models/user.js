@@ -90,7 +90,13 @@ s.schema.statics.sellStock = async function (user, ticker, amount, totalCost) {
     } else {
       this.findOneAndUpdate({ _id: user._id, 'stocks.ticker': ticker }, { $inc: { 'stocks.$.count': -amount } }).then(() => {
         this.deposit(user, totalCost).then(() => {
-          resolve(stockAmt - amount)
+          if (amount === stockAmt) {
+            this.update({ _id: user._id }, { $pull: { stocks: { ticker: ticker } } }).then(() => {
+              resolve(stockAmt - amount)
+            })
+          } else {
+            resolve(stockAmt - amount)
+          }
         }).catch(reject)
       }).catch(reject)
     }

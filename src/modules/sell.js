@@ -10,7 +10,8 @@ module.exports = {
     const amount = message.args[0]
 
     client.sellStock(ticker, amount, message.author.id).then(({price, newTotal}) => {
-      return message.channel.send(':white_check_mark:  Your sale of ' + amount + ' ' + ticker.toUpperCase() + ' stock @ $' + price + ' for a total of $' + client.addCommas(price * parseInt(amount)) + ' completed successfully. You now have ' + newTotal + ' ' + ticker.toUpperCase() + ' stock.')
+      return message.channel.send(':white_check_mark:  Your sale of ' + amount + ' ' + ticker.toUpperCase() + ' stock @ $' + client.addCommas(price) +
+      ' for a total of **$' + client.addCommas(price * parseInt(amount)) + '** completed successfully. You now have **' + newTotal + '** ' + ticker.toUpperCase() + ' stock.')
     }).catch((err) => {
       if (err.message === 'user does not have enough stock') {
         return message.channel.send('You do not have sufficient inventory to sell ' + amount + ' of ' + ticker + ' stock.')

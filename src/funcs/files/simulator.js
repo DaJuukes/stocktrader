@@ -5,8 +5,10 @@ module.exports = bot => {
     return User.findOne({id})
   }
 
-  bot.createUser = function (id) {
-    return User.create({id})
+  bot.createUser = async function (id, money) {
+    const user = await User.findOne({id})
+    if (user) return false
+    else return User.create({id, balance: money})
   }
 
   bot.buyStock = async function (ticker, _amount, userID) {
@@ -16,7 +18,6 @@ module.exports = bot => {
       if (isNaN(amount)) reject(new Error('amount is not a number'))
       bot.validateUser(userID).then(user => {
         if (!user) {
-          bot.createUser(userID)
           reject(new Error('user didn\'t exist'))
         }
         const isTickerValid = bot.getTicker(ticker)
@@ -24,7 +25,7 @@ module.exports = bot => {
           bot.getStockPrice(ticker).then(price => {
             const totalCost = price * amount
 
-            User.buyStock(user, ticker, amount, totalCost).then((newTotal) => {
+            User.buyStock(user, ticker.toUpperCase(), amount, totalCost).then((newTotal) => {
               resolve({price, newTotal})
             }).catch(err => {
               reject(err)
@@ -43,14 +44,13 @@ module.exports = bot => {
       if (isNaN(amount) || amount <= 0) reject(new Error('amount is not a valid number'))
       bot.validateUser(userID).then(user => {
         if (!user) {
-          bot.createUser(userID)
           reject(new Error('user didn\'t exist'))
         }
         const isTickerValid = bot.getTicker(ticker)
         if (isTickerValid) {
           bot.getStockPrice(ticker).then(price => {
             const totalCost = price * amount
-            User.sellStock(user, ticker, amount, totalCost).then((newTotal) => {
+            User.sellStock(user, ticker.toUpperCase(), amount, totalCost).then((newTotal) => {
               resolve({price, newTotal})
             }).catch(err => {
               reject(err)

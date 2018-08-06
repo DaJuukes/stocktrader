@@ -6,6 +6,12 @@ module.exports = bot => {
     return json.body
   }
 
+  bot.getMultipleStockData = async function (tickerArr) {
+    const str = tickerArr.join(',')
+    const json = await snekfetch.get(process.env.API_URL + '/stock/market/batch?symbols=' + str + '&types=price')
+    return json.body
+  }
+
   bot.getStockData = async function (ticker) {
     const json = await snekfetch.get(process.env.API_URL + '/stock/' + ticker + '/stats')
     return json.body

@@ -16,5 +16,9 @@ if (!process.env.TOKEN) {
   process.exit(0)
 }
 
+if (process.env.SHARDS !== '0') {
 const Manager = new Discord.ShardingManager(srcRoot + '/bot.js', { totalShards: parseInt(process.env.SHARDS), token: process.env.TOKEN })
 Manager.spawn()
+} else {
+  require('./bot.js')
+}
