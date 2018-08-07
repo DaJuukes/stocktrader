@@ -54,9 +54,9 @@ module.exports = {
                        `\nUpvote the bot on DBL [here](${process.env.UPVOTE_LINK})` +
                        `\n**Command List**\n` +
                        `Use \`help [command] \` to get more info on a specific command \n` +
-                       `For example,  \`help scan\`\n\n` +
-                       '**Core** - `$` \n' +
-                       '**Simulator** - Coming soon\n' +
+                       `For example,  \`help buy\`\n\n` +
+                       '**Core** - `chart` `$`\n' +
+                       '**Simulator** - `newacc` `buy` `sell` `portfolio`\n' +
                        '**Fun** - Coming soon\n' +
                        '**Management** - `invite` `upvote` `ping` `setprefix` `stats` \n\n' +
                        `\nSupport: <${process.env.SUPPORT_SERVER}>`

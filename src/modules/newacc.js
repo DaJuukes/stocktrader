@@ -1,10 +1,10 @@
 module.exports = {
   name: 'newacc',
   type: 'core',
-  usage: 'invite',
-  example: 'invite',
+  usage: 'newacc',
+  example: 'newacc',
   permission: 1,
-  help: 'Generate support server/bot invite links',
+  help: 'Create a new simulator account!',
   main: async function (bot, message) {
     const result = await bot.createUser(message.author.id, process.env.STARTING_CASH)
 

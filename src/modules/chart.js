@@ -1,8 +1,8 @@
 module.exports = {
   name: 'chart',
   type: 'core',
-  usage: 'invite',
-  example: 'invite',
+  usage: 'chart [ticker] [timeframe]',
+  example: 'chart',
   permission: 1,
   help: 'Generate support server/bot invite links',
   main: async function (bot, message) {
