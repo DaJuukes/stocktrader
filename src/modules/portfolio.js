@@ -7,7 +7,7 @@ module.exports = {
   help: 'Sell stock.',
   main: function (client, message) {
     client.generatePortfolioEmbed(message.author).then((emb, cash) => {
-      if (!emb) message.channel.send('You do not own any stocks, but your cash value is ' + client.addCommas(cash) + '.')
+      if (!emb) message.channel.send('You do not have a simulator account! Create one using `(prefix)newacc` !')
       else message.channel.send(emb)
     })
   }
