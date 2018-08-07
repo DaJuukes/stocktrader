@@ -143,8 +143,10 @@ module.exports = bot => {
 
     let delta = Math.floor(data.length / 26)
     for (let i = 0; i < data.length; i = i + delta) {
-      arr.push(data[i].average)
-      labels.push(data[i].minute)
+      if (data[i].average > 0) {
+        arr.push(data[i].average)
+        labels.push(data[i].minute)
+      }
     }
     let fontSize = 25
     return {arr, labels, fontSize}
