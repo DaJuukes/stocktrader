@@ -59,10 +59,10 @@ module.exports = bot => {
   bot.generatePortfolioEmbed = async function (author) {
     return new Promise(async (resolve, reject) => {
       const user = await User.findOne({id: author.id})
-      const stocks = user.stocks
 
       if (!user) resolve(false)
       else {
+        const stocks = user.stocks
         const emb = new RichEmbed()
           .setTitle(author.username + '\'s Portfolio')
           .setColor('GOLD')

@@ -1,6 +1,6 @@
 {
-  "name": "discrypto",
-  "version": "1.0.0",
+  "name": "stocktrader",
+  "version": "0.0.1",
   "description": "",
   "main": ".eslintrc.js",
   "scripts": {
