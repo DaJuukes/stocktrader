@@ -27,12 +27,11 @@ module.exports = {
         msg.edit('Creating a chart for ' + _ticker.toUpperCase() + ' ' + _timeframe.toUpperCase() + '\n\nTime elapsed: ' + newNum)
       }, 1000, time)
 
-      timePromise().then(() => {
+      bot.graphData(_ticker, _timeframe).then((buffer) => {
         done = true
-        console.log('done')
+        if (!buffer) return message.channel.send('An error occured, sorry!')
+        else return message.channel.send('Graph complete!', { file: buffer })
       })
     }
   }
 }
-
-const timePromise = () => new Promise((resolve, reject) => setTimeout(resolve, 700))

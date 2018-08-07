@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/DisCrypto/DisCrypto-Discord#readme",
   "dependencies": {
+    "canvas": "^1.6.11",
+    "chart.js": "^2.7.2",
     "chartjs-node": "^1.7.1",
     "dblapi.js": "^2.1.0",
     "decimal.js": "^10.0.1",

@@ -34,9 +34,6 @@ module.exports = bot => {
   bot.getTicker = function (ticker) {
     return (tickers.indexOf(ticker.toUpperCase()) > -1) ? ticker.toUpperCase() : false
   }
-  bot.validateTimeframe = function (ticker) {
-    return /[1d|1m|3m|6m|1y]/.test(ticker)
-  }
 
   bot.getStockEmbed = async function (ticker) {
     const price = await bot.getStockPrice(ticker)
